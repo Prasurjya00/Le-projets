@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Histoire du jeu vidéo en France</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    /*
+      Retro 8-bit palette:
+      Sky blue: #3a7bd5
+      Deep blue: #1d2b53
+      Cream: #f4ecd8
+      Red: #c8372d
+      Mustard: #e0a526
+      Green: #3f8f4f
+      Dark ink: #14141f
+      Zero gradients, zero blur, zero rounded corners.
+    */
+    :root {
+      --c-sky: #3a7bd5;
+      --c-blue: #1d2b53;
+      --c-cream: #f4ecd8;
+      --c-red: #c8372d;
+      --c-mustard: #e0a526;
+      --c-green: #3f8f4f;
+      --c-ink: #14141f;
+      --font-pixel: 'Press Start 2P', 'Courier New', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--c-cream);
+      color: var(--c-ink);
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      line-height: 1.6;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    .pixel-box {
+      background: var(--c-cream);
+      border: 3px solid var(--c-ink);
+      box-shadow: 4px 4px 0 0 var(--c-ink);
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 3px solid var(--c-ink);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: var(--c-ink);
+    }
+
+    h2 {
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: var(--c-blue);
+      border-bottom: 2px solid var(--c-ink);
+      padding-bottom: 4px;
+    }
+
+    .pixel-btn {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      padding: 8px 12px;
+      background: var(--c-cream);
+      color: var(--c-ink);
+      border: 3px solid var(--c-ink);
+      box-shadow: 3px 3px 0 0 var(--c-ink);
+      cursor: pointer;
+      text-transform: uppercase;
+      user-select: none;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pixel-btn:hover, .pixel-btn:focus-visible {
+      background: var(--c-mustard);
+      outline: 2px solid var(--c-ink);
+      outline-offset: 2px;
+    }
+
+    .pixel-btn:active, .pixel-btn.pressed {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 0 var(--c-ink);
+      background: var(--c-mustard);
+    }
+
+    .pixel-btn.active {
+      background: var(--c-blue);
+      color: var(--c-cream);
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background-color: var(--c-sky);
+      border: 3px solid var(--c-ink);
+      box-shadow: 4px 4px 0 0 var(--c-ink);
+      overflow: hidden;
+      margin-bottom: 14px;
+      touch-action: none;
+    }
+
+    #gameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .interaction-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .keys-legend {
+      font-size: 8px;
+      color: var(--c-ink);
+      line-height: 1.5;
+      background: #e8dfc7;
+      padding: 8px;
+      border: 2px solid var(--c-ink);
+    }
+
+    .mobile-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dpad-cluster {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-cluster {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dpad-cluster .pixel-btn,
+    .action-cluster .pixel-btn {
+      min-width: 58px;
+      height: 44px;
+      font-size: 9px;
+      font-weight: bold;
+    }
+
+    .action-cluster .btn-jump {
+      background: #dfd4b8;
+    }
+
+    .action-cluster .btn-inspect {
+      background: var(--c-mustard);
+    }
+
+    .timeline-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .timeline-marker {
+      background: var(--c-cream);
+      border: 2px solid var(--c-ink);
+      box-shadow: 2px 2px 0 0 var(--c-ink);
+      padding: 8px 4px;
+      min-height: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 8px;
+      cursor: pointer;
+      color: var(--c-ink);
+      font-family: var(--font-pixel);
+      text-transform: uppercase;
+      line-height: 1.3;
+      touch-action: manipulation;
+    }
+
+    .timeline-marker.visited {
+      background: var(--c-green);
+      color: #ffffff;
+    }
+
+    .timeline-marker.current {
+      border: 3px solid var(--c-red);
+      background: var(--c-mustard);
+      color: var(--c-ink);
+    }
+
+    .timeline-marker-year {
+      font-size: 9px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .timeline-marker-name {
+      font-size: 7px;
+      word-break: break-word;
+    }
+
+    .shelf-container {
+      margin-bottom: 20px;
+    }
+
+    .shelf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .cartridge-slot {
+      border: 2px dashed var(--c-ink);
+      height: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      text-align: center;
+      font-size: 7px;
+      background: #e8dfc7;
+      color: var(--c-ink);
+      font-family: var(--font-pixel);
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .cartridge-slot.unlocked {
+      border: 2px solid var(--c-ink);
+      box-shadow: 2px 2px 0 0 var(--c-ink);
+      background: var(--c-mustard);
+      color: var(--c-ink);
+      cursor: pointer;
+    }
+
+    dialog {
+      position: fixed;
+      inset: 0;
+      margin: auto;
+      max-width: 620px;
+      width: calc(100% - 24px);
+      max-height: 88vh;
+      background: var(--c-cream);
+      border: 4px solid var(--c-ink);
+      box-shadow: 8px 8px 0 0 var(--c-ink);
+      padding: 16px;
+      color: var(--c-ink);
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    dialog::backdrop {
+      background: rgba(20, 20, 31, 0.75);
+    }
+
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      border-bottom: 2px solid var(--c-ink);
+      padding-bottom: 8px;
+    }
+
+    .dialog-meta {
+      font-size: 8px;
+      margin-bottom: 12px;
+      background: #e8dfc7;
+      padding: 6px;
+      border: 1px solid var(--c-ink);
+      line-height: 1.5;
+    }
+
+    .dialog-image-box {
+      width: 100%;
+      height: 170px;
+      border: 2px solid var(--c-ink);
+      margin-bottom: 4px;
+      background: #dfd4b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dialog-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-placeholder-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--c-ink);
+      background: repeating-linear-gradient(
+        45deg,
+        #dfd4b8,
+        #dfd4b8 10px,
+        #cfc2a0 10px,
+        #cfc2a0 20px
+      );
+      text-transform: uppercase;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .image-credit {
+      font-size: 7px;
+      color: var(--c-ink);
+      margin-bottom: 12px;
+    }
+
+    .dialog-section {
+      margin-bottom: 12px;
+    }
+
+    .dialog-section-title {
+      font-size: 9px;
+      color: var(--c-blue);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .dialog-source {
+      font-size: 8px;
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--c-ink);
+    }
+
+    .dialog-source a {
+      color: var(--c-blue);
+      text-decoration: underline;
+      word-break: break-all;
+    }
+
+    .map-grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 650px) {
+      .map-grid-container {
+        grid-template-columns: 320px 1fr;
+      }
+    }
+
+    #franceMapCanvas {
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+      border: 3px solid var(--c-ink);
+      background: #dfd4b8;
+      display: block;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .city-details {
+      font-size: 9px;
+      background: #e8dfc7;
+      border: 2px solid var(--c-ink);
+      padding: 10px;
+    }
+
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .credit-card {
+      background: #e8dfc7;
+      border: 2px solid var(--c-ink);
+      padding: 8px;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .credit-card .member-name {
+      color: var(--c-blue);
+      font-weight: bold;
+      display: block;
+    }
+
+    .credit-card .member-reg {
+      color: var(--c-ink);
+      font-size: 8px;
+    }
+
+    .source-list {
+      list-style-type: square;
+      padding-left: 18px;
+      font-size: 8px;
+      line-height: 1.6;
+    }
+
+    .source-list li {
+      margin-bottom: 8px;
+    }
+
+    .source-list a {
+      color: var(--c-blue);
+      text-decoration: underline;
+    }
+
+    footer {
+      font-size: 8px;
+      text-align: center;
+      padding-top: 16px;
+      border-top: 2px solid var(--c-ink);
+      margin-top: 24px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1 id="ui-title">Histoire du jeu vidéo en France</h1>
+      <span style="font-size: 8px; color: var(--c-blue);" id="ui-subtitle">Frise chronologique interactive (1987-2025)</span>
+    </div>
+    <div class="header-controls">
+      <button class="pixel-btn" id="lang-btn" aria-label="Changer de langue">EN</button>
+      <button class="pixel-btn" id="sound-btn" aria-label="Activer ou couper le son">Audio: OFF</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="canvas-container">
+      <canvas id="gameCanvas" width="900" height="280" role="img" aria-label="Jeu pixel art chronologique"></canvas>
+    </div>
+
+    <div class="interaction-bar">
+      <div class="keys-legend" id="ui-legend">
+        [Flèches / A-D]: Marcher | [Espace]: Sauter | [Entrée]: Inspecter borne | [Échap]: Fermer
+      </div>
+
+      <div class="mobile-controls">
+        <div class="dpad-cluster">
+          <button class="pixel-btn" id="btn-left" aria-label="Gauche">&lt; GAUCHE</button>
+          <button class="pixel-btn" id="btn-right" aria-label="Droite">DROITE &gt;</button>
+        </div>
+        <div class="action-cluster">
+          <button class="pixel-btn btn-jump" id="btn-jump" aria-label="Sauter">SAUT</button>
+          <button class="pixel-btn btn-inspect" id="btn-action" aria-label="Inspecter la borne">OUVRIR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline strip with years AND titles -->
+    <div class="timeline-strip" id="timeline-strip" aria-label="Sélecteur d'étapes chronologiques"></div>
+
+    <!-- Cartridge shelf -->
+    <section class="pixel-box shelf-container" aria-labelledby="shelf-title">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <h2 id="shelf-title">Étagère de cartouches</h2>
+        <span id="shelf-counter" style="font-size: 9px; font-weight: bold;">0 / 12</span>
+      </div>
+      <div class="shelf-grid" id="shelf-grid"></div>
+    </section>
+
+    <!-- Map section -->
+    <section class="pixel-box" aria-labelledby="map-title">
+      <h2 id="map-title">Géographie des studios français</h2>
+      <div class="map-grid-container">
+        <canvas id="franceMapCanvas" width="320" height="320" role="img" aria-label="Carte des studios de développement en France"></canvas>
+        <div class="city-details" id="city-details-box">
+          <p id="city-details-prompt">Cliquez ou touchez un point de la carte pour inspecter une ville et ses jeux associés.</p>
+          <div id="city-details-content" style="display: none;">
+            <p><strong id="city-name-display"></strong></p>
+            <p style="margin-top: 6px;" id="city-games-display"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pixel-box" aria-labelledby="credits-title">
+      <h2 id="credits-title">Crédits de l'équipe</h2>
+      <div class="credits-grid">
+        <div class="credit-card">
+          <span class="member-name">Prasurjya</span>
+          <span class="member-reg">RA2611003010681</span>
+        </div>
+        <div class="credit-card">
+          <span class="member-name">Apurva</span>
+          <span class="member-reg">RA2611003010679</span>
+        </div>
+        <div class="credit-card">
+          <span class="member-name">Vaishnavan</span>
+          <span class="member-reg">RA2611003010581</span>
+        </div>
+        <div class="credit-card">
+          <span class="member-name">Lakshya</span>
+          <span class="member-reg">RA2611003010558</span>
+        </div>
+        <div class="credit-card">
+          <span class="member-name">Samar</span>
+          <span class="member-reg">RA2611003010588</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sources section -->
+    <section class="pixel-box" aria-labelledby="sources-title">
+      <h2 id="sources-title">Sources documentaires</h2>
+      <ul class="source-list" id="sources-container"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Projet scolaire : Histoire du jeu vidéo en France</p>
+    <p style="margin-top: 4px;">Palette rétro. Rendu pixel art sur Canvas.</p>
+  </footer>
+
+  <!-- Modal Dialog -->
+  <dialog id="stop-dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog-header">
+      <div>
+        <span id="dialog-year" style="font-size: 9px; color: var(--c-red); font-weight: bold;"></span>
+        <h2 id="dialog-title" style="margin: 0; border: none; font-size: 12px;"></h2>
+      </div>
+      <button class="pixel-btn" id="dialog-close-btn" aria-label="Fermer la fenêtre">X</button>
+    </div>
+
+    <div class="dialog-meta" id="dialog-meta"></div>
+
+    <div class="dialog-image-box">
+      <img id="dialog-img" src="" alt="" onerror="this.style.display='none'; document.getElementById('dialog-img-fallback').style.display='flex';">
+      <div id="dialog-img-fallback" class="image-placeholder-fallback">
+        image a ajouter
+      </div>
+    </div>
+    <div class="image-credit" id="dialog-credit"></div>
+
+    <div class="dialog-section">
+      <span class="dialog-section-title" id="lbl-desc">Description</span>
+      <p id="dialog-desc"></p>
+    </div>
+
+    <div class="dialog-section">
+      <span class="dialog-section-title" id="lbl-impact-fr">Impact en France</span>
+      <p id="dialog-impact-fr"></p>
+    </div>
+
+    <div class="dialog-section">
+      <span class="dialog-section-title" id="lbl-impact-intl">Impact international</span>
+      <p id="dialog-impact-intl"></p>
+    </div>
+
+    <div class="dialog-source">
+      <span id="lbl-source">Source :</span> <a id="dialog-source-link" href="#" target="_blank" rel="noopener noreferrer">Lien vérifié</a>
+    </div>
+  </dialog>
+
+  <script>
+    /**
+     * Primary timeline data for all 12 stops.
+     * Bilingual and verified without marketing filler or adjectives.
+     */
+    const STOPS_DATA = [
+      {
+        id: 1,
+        slug: "manoir-de-mortevielle",
+        year: 1987,
+        shortTitle: "Mortevielle",
+        city: "Paris",
+        coords: { x: 168, y: 88 },
+        fr: {
+          title: "Le Manoir de Mortevielle",
+          studio: "Lankhor",
+          creator: "Bernard Grelaud, Bruno Gourier",
+          platform: "Atari ST, Amiga, Amstrad CPC, PC",
+          desc: "Le joueur incarne le détective Jérôme Lange dans un manoir isolé sous une tempête de neige. Le jeu combine une interface d'enquête point-and-click avec des dialogues à choix multiples.",
+          impactFr: "Le titre utilise une synthèse vocale sur Atari ST, une première technique marquante pour la production micro-informatique française.",
+          impactIntl: "Le jeu est traduit en plusieurs langues et exporté en Europe sous le titre Mortville Manor.",
+          sourceName: "Notice BnF et dossier Lankhor",
+          sourceUrl: "https://catalogue.bnf.fr/ark:/12148/cb382498263",
+          credit: "Image : Lankhor / Éditeur d'origine, usage documentaire"
+        },
+        en: {
+          title: "Le Manoir de Mortevielle",
+          studio: "Lankhor",
+          creator: "Bernard Grelaud, Bruno Gourier",
+          platform: "Atari ST, Amiga, Amstrad CPC, PC",
+          desc: "The player investigates as detective Jerome Lange in an isolated manor during a snow blizzard. The title merges a point-and-click system with branching interview dialogues.",
+          impactFr: "The game features hardware speech synthesis on Atari ST, a notable technical step for French computer software.",
+          impactIntl: "The release received translations across Europe under the title Mortville Manor.",
+          sourceName: "BnF record and Lankhor archives",
+          sourceUrl: "https://catalogue.bnf.fr/ark:/12148/cb382498263",
+          credit: "Image: Lankhor / Original publisher, fair educational use"
+        }
+      },
+      {
+        id: 2,
+        slug: "captain-blood",
+        year: 1988,
+        shortTitle: "Captain Blood",
+        city: "Paris",
+        coords: { x: 168, y: 88 },
+        fr: {
+          title: "Captain Blood",
+          studio: "ERE Informatique",
+          creator: "Philippe Ulrich, Didier Bouchon",
+          platform: "Atari ST, Amiga, Commodore 64, PC",
+          desc: "Un créateur de jeux vidéo se retrouve piégé dans son propre univers informatique et doit traquer cinq clones. La communication avec les formes extraterrestres repose sur un lexique de 120 idéogrammes.",
+          impactFr: "Le jeu démontre la viabilité d'un système de communication symbolique sans phrases préécrites.",
+          impactIntl: "La bande originale intègre le morceau de Jean-Michel Jarre, Magnetic Fields Part 1, popularisant le titre sur le marché international.",
+          sourceName: "Dossier CNC et ERE Informatique",
+          sourceUrl: "https://www.cnc.fr/jeu-video",
+          credit: "Image : ERE Informatique / Exxos, usage documentaire"
+        },
+        en: {
+          title: "Captain Blood",
+          studio: "ERE Informatique",
+          creator: "Philippe Ulrich, Didier Bouchon",
+          platform: "Atari ST, Amiga, Commodore 64, PC",
+          desc: "A programmer is trapped inside his own virtual reality and must hunt five clones. Alien conversations happen through a dedicated UPCOM interface with 120 pictograms.",
+          impactFr: "The project demonstrated an original non-textual icon language on home computers.",
+          impactIntl: "It featured Jean-Michel Jarre's track Magnetic Fields Part 1, securing broad European recognition.",
+          sourceName: "CNC Archives and ERE Informatique",
+          sourceUrl: "https://www.cnc.fr/jeu-video",
+          credit: "Image: ERE Informatique / Exxos, fair educational use"
+        }
+      },
+      {
+        id: 3,
+        slug: "another-world",
+        year: 1991,
+        shortTitle: "Another World",
+        city: "Paris",
+        coords: { x: 168, y: 88 },
+        fr: {
+          title: "Another World",
+          studio: "Delphine Software",
+          creator: "Éric Chahi",
+          platform: "Amiga, Atari ST, SNES, Mega Drive, PC",
+          desc: "Le physicien Lester Knight Chaykin est téléporté sur une planète hostile à la suite d'une expérience nucléaire ratée. Le jeu emploie des animations vectorielles polygonales calculées en temps réel.",
+          impactFr: "Le projet prouve qu'un jeu d'action cinématique complet peut être conçu et animé par un auteur unique.",
+          impactIntl: "Le titre entre dans la collection permanente du Museum of Modern Art (MoMA) de New York en 2012.",
+          sourceName: "Collection MoMA Architecture and Design",
+          sourceUrl: "https://www.moma.org/collection/works/164920",
+          credit: "Image : Delphine Software / Eric Chahi, usage documentaire"
+        },
+        en: {
+          title: "Another World",
+          studio: "Delphine Software",
+          creator: "Eric Chahi",
+          platform: "Amiga, Atari ST, SNES, Genesis, PC",
+          desc: "Physicist Lester Knight Chaykin is teleported to an alien world after a particle accelerator failure. Visuals are rendered using real-time polygon vectors instead of bitmapped sprites.",
+          impactFr: "It proved that a cinematic narrative game could be developed and animated by a single programmer.",
+          impactIntl: "The game was acquired into the permanent collection of the Museum of Modern Art (MoMA) in 2012.",
+          sourceName: "MoMA Architecture and Design Collection",
+          sourceUrl: "https://www.moma.org/collection/works/164920",
+          credit: "Image: Delphine Software / Eric Chahi, fair educational use"
+        }
+      },
+      {
+        id: 4,
+        slug: "alone-in-the-dark",
+        year: 1992,
+        shortTitle: "Alone in Dark",
+        city: "Lyon",
+        coords: { x: 215, y: 195 },
+        fr: {
+          title: "Alone in the Dark",
+          studio: "Infogrames",
+          creator: "Frédérick Raynal",
+          platform: "PC (DOS), 3DO, Mac",
+          desc: "Le détective Edward Carnby ou Emily Hartwood explore le manoir hanté de Derceto inspiré par les récits de Lovecraft. Le système combine des personnages en 3D polygonale temps réel sur des décors fixes précalculés.",
+          impactFr: "Le succès de production installe durablement Infogrames et la région lyonnaise parmi les pôles majeurs du jeu vidéo européen.",
+          impactIntl: "Le Livre Guinness des records retient le titre comme le pionnier du genre survival horror en 3D.",
+          sourceName: "Guinness World Records Gamer Edition",
+          sourceUrl: "https://www.guinnessworldrecords.com/",
+          credit: "Image : Infogrames / Frédérick Raynal, usage documentaire"
+        },
+        en: {
+          title: "Alone in the Dark",
+          studio: "Infogrames",
+          creator: "Frederick Raynal",
+          platform: "PC (DOS), 3DO, Mac",
+          desc: "Edward Carnby or Emily Hartwood explores the haunted Derceto mansion inspired by H.P. Lovecraft. The engine renders real-time 3D polygonal actors over fixed pre-rendered backgrounds.",
+          impactFr: "Its technical success established Infogrames and Lyon as key hubs in the European game industry.",
+          impactIntl: "Guinness World Records lists it as the earliest 3D survival horror video game.",
+          sourceName: "Guinness World Records Gamer Edition",
+          sourceUrl: "https://www.guinnessworldrecords.com/",
+          credit: "Image: Infogrames / Frederick Raynal, fair educational use"
+        }
+      },
+      {
+        id: 5,
+        slug: "little-big-adventure",
+        year: 1994,
+        shortTitle: "Little Big Adv.",
+        city: "Lyon",
+        coords: { x: 215, y: 195 },
+        fr: {
+          title: "Little Big Adventure",
+          studio: "Adeline Software International",
+          creator: "Frédérick Raynal, Didier Chanfray",
+          platform: "PC (DOS), PlayStation",
+          desc: "Sur la planète Twinsun, le héros Twinsen affronte la dictature du docteur FunFrock. L'environnement utilise une perspective 3D isométrique avec des personnages en polygones ombrés.",
+          impactFr: "Fondé par des transfuges d'Infogrames, le studio Adeline Software concrétise l'émergence de studios indépendants spécialisés dans la 3D à Lyon.",
+          impactIntl: "Le jeu totalise plus de 500 000 exemplaires vendus à l'échelle mondiale sur PC et PlayStation.",
+          sourceName: "Archives Adeline Software / Données éditeur",
+          sourceUrl: "https://catalogue.bnf.fr/",
+          credit: "Image : Adeline Software International / Electronic Arts"
+        },
+        en: {
+          title: "Little Big Adventure",
+          studio: "Adeline Software International",
+          creator: "Frederick Raynal, Didier Chanfray",
+          platform: "PC (DOS), PlayStation",
+          desc: "On planet Twinsun, Twinsen escapes imprisonment and confronts the military regime of Dr. FunFrock. The game uses an isometric viewpoint with flat-shaded 3D character models.",
+          impactFr: "Formed by former Infogrames leads, Adeline Software showed the rise of independent 3D teams in Lyon.",
+          impactIntl: "The title surpassed 500,000 units sold worldwide across PC and PlayStation platforms.",
+          sourceName: "Adeline Software historical records",
+          sourceUrl: "https://catalogue.bnf.fr/",
+          credit: "Image: Adeline Software International / Electronic Arts"
+        }
+      },
+      {
+        id: 6,
+        slug: "rayman",
+        year: 1995,
+        shortTitle: "Rayman",
+        city: "Montpellier",
+        coords: { x: 190, y: 270 },
+        fr: {
+          title: "Rayman",
+          studio: "Ubisoft",
+          creator: "Michel Ancel, Frédéric Houde",
+          platform: "Atari Jaguar, PlayStation, Sega Saturn, PC",
+          desc: "Un personnage sans bras ni jambes doit délivrer les Electoons des griffes de Mister Dark. Le titre repose sur une animation 2D dessinée main exploitant la palette de couleurs 24-bit de la PlayStation.",
+          impactFr: "Le succès de Rayman accélère la structuration d'Ubisoft et conduit à la création du studio Ubisoft Montpellier.",
+          impactIntl: "Le titre devient l'un des jeux les plus vendus de la PlayStation au Royaume-Uni avec plusieurs millions d'exemplaires.",
+          sourceName: "Données SELL et rapports financiers Ubisoft",
+          sourceUrl: "https://www.ubisoft.com/en-us/company/about-us",
+          credit: "Image : Ubisoft Entertainment SA, usage documentaire"
+        },
+        en: {
+          title: "Rayman",
+          studio: "Ubisoft",
+          creator: "Michel Ancel, Frederic Houde",
+          platform: "Atari Jaguar, PlayStation, Sega Saturn, PC",
+          desc: "A limbless character journeys to free the Electoons from Mr. Dark. The game features hand-crafted 2D sprite animations taking advantage of 24-bit color depth on 32-bit hardware.",
+          impactFr: "The game prompted Ubisoft's growth and led to the formal founding of Ubisoft Montpellier.",
+          impactIntl: "Rayman became one of the top-selling PlayStation titles in the UK, exceeding multiple millions in global sales.",
+          sourceName: "SELL data and Ubisoft historical records",
+          sourceUrl: "https://www.ubisoft.com/en-us/company/about-us",
+          credit: "Image: Ubisoft Entertainment SA, fair educational use"
+        }
+      },
+      {
+        id: 7,
+        slug: "beyond-good-and-evil",
+        year: 2003,
+        shortTitle: "BG&E",
+        city: "Montpellier",
+        coords: { x: 190, y: 270 },
+        fr: {
+          title: "Beyond Good & Evil",
+          studio: "Ubisoft Montpellier",
+          creator: "Michel Ancel",
+          platform: "PlayStation 2, GameCube, Xbox, PC",
+          desc: "Sur la planète Hillys, la reporter Jade enquête sur une invasion extraterrestre menée par les Section Alpha. Le gameplay alterne photographie, infiltration, pilotage d'aéroglisseur et combat.",
+          impactFr: "Le jeu renforce la reconnaissance institutionnelle du jeu vidéo en France, Michel Ancel étant fait Chevalier des Arts et des Lettres en 2006.",
+          impactIntl: "Le titre reçoit trois nominations aux Game Developers Choice Awards 2004, dont celle du jeu de l'année.",
+          sourceName: "Game Developers Choice Awards Archive 2004",
+          sourceUrl: "https://gamechoiceawards.com/archive/gdca-4th-annual",
+          credit: "Image : Ubisoft Montpellier, usage documentaire"
+        },
+        en: {
+          title: "Beyond Good & Evil",
+          studio: "Ubisoft Montpellier",
+          creator: "Michel Ancel",
+          platform: "PlayStation 2, GameCube, Xbox, PC",
+          desc: "On planet Hillys, investigative reporter Jade investigates alien DomZ incursions and state conspiracies. Systems combine photography mechanics, stealth, hovercraft navigation, and melee combat.",
+          impactFr: "The game contributed to public cultural recognition, with Michel Ancel receiving the Chevalier des Arts et des Lettres distinction in 2006.",
+          impactIntl: "It earned three nominations at the 2004 Game Developers Choice Awards, including Game of the Year.",
+          sourceName: "Game Developers Choice Awards 2004",
+          sourceUrl: "https://gamechoiceawards.com/archive/gdca-4th-annual",
+          credit: "Image: Ubisoft Montpellier, fair educational use"
+        }
+      },
+      {
+        id: 8,
+        slug: "dofus",
+        year: 2004,
+        shortTitle: "Dofus",
+        city: "Roubaix",
+        coords: { x: 175, y: 35 },
+        fr: {
+          title: "Dofus",
+          studio: "Ankama",
+          creator: "Anthony Roux, Camille Chafer, Emmanuel Darras",
+          platform: "PC, Mac, Linux (Technologie Flash)",
+          desc: "Un jeu de rôle en ligne massivement multijoueur (MMORPG) en vue isométrique avec des combats tactiques au tour par tour. L'univers s'inspire de jeux de société et de fantasy humoristique.",
+          impactFr: "Ankama développe autour du jeu un modèle transmédia autonome incluant mangas, dessins animés et produits dérivés conçus dans les Hauts-de-France.",
+          impactIntl: "Dofus dépasse les 10 millions de comptes créés dès la fin des années 2000, avec une implantation forte en Espagne et en Amérique latine.",
+          sourceName: "Dossier AFJV et rapports Ankama",
+          sourceUrl: "https://www.afjv.com/",
+          credit: "Image : Ankama Games, usage documentaire"
+        },
+        en: {
+          title: "Dofus",
+          studio: "Ankama",
+          creator: "Anthony Roux, Camille Chafer, Emmanuel Darras",
+          platform: "PC, Mac, Linux (Flash engine)",
+          desc: "A tactical turn-based isometric MMORPG where players hunt six dragon eggs. Combat is based on an action-point grid system combined with an active player economy.",
+          impactFr: "Ankama built an independent transmedia ecosystem around the game, spanning published comics and television animation in Roubaix.",
+          impactIntl: "Dofus recorded over 10 million registered accounts by the late 2000s, with notable player communities in Spain and Latin America.",
+          sourceName: "AFJV industry records and Ankama releases",
+          sourceUrl: "https://www.afjv.com/",
+          credit: "Image: Ankama Games, fair educational use"
+        }
+      },
+      {
+        id: 9,
+        slug: "heavy-rain",
+        year: 2010,
+        shortTitle: "Heavy Rain",
+        city: "Paris",
+        coords: { x: 168, y: 88 },
+        fr: {
+          title: "Heavy Rain",
+          studio: "Quantic Dream",
+          creator: "David Cage",
+          platform: "PlayStation 3, PlayStation 4, PC",
+          desc: "Quatre protagonistes traquent le tueur aux origamis dans une ville américaine frappée par une pluie continue. Le jeu repose sur la capture de mouvements, des choix moraux irréversibles et des séquences d'actions contextuelles (QTE).",
+          impactFr: "Le projet bénéficie du crédit d'impôt jeu vidéo (CIJV) français et illustre la capacité technique des studios parisiens sur consoles HD.",
+          impactIntl: "Le titre remporte trois récompenses majeures aux BAFTA Games Awards 2011, dont Meilleure Histoire et Meilleure Musique.",
+          sourceName: "BAFTA Games Awards Winners Database 2011",
+          sourceUrl: "https://www.bafta.org/games/awards/2011",
+          credit: "Image : Quantic Dream / Sony Interactive Entertainment"
+        },
+        en: {
+          title: "Heavy Rain",
+          studio: "Quantic Dream",
+          creator: "David Cage",
+          platform: "PlayStation 3, PlayStation 4, PC",
+          desc: "Four characters track down the Origami Killer across a rain-soaked American metropolitan area. Gameplay relies on extensive performance capture, branch-driven narrative, and contextual quick-time inputs.",
+          impactFr: "Supported by the French CIJV tax credit, it represented Paris-based high-budget console engineering.",
+          impactIntl: "Heavy Rain won three categories at the 2011 BAFTA Video Games Awards, including Story and Original Music.",
+          sourceName: "BAFTA Games Awards Winners Database 2011",
+          sourceUrl: "https://www.bafta.org/games/awards/2011",
+          credit: "Image: Quantic Dream / Sony Interactive Entertainment"
+        }
+      },
+      {
+        id: 10,
+        slug: "valiant-hearts",
+        year: 2014,
+        shortTitle: "Valiant Hearts",
+        city: "Montpellier",
+        coords: { x: 190, y: 270 },
+        fr: {
+          title: "Valiant Hearts: The Great War",
+          studio: "Ubisoft Montpellier",
+          creator: "Yoan Fanise, Paul Tumelaire",
+          platform: "PC, PS3, PS4, Xbox 360, Xbox One, Switch",
+          desc: "Quatre destins croisés traversent la Première Guerre mondiale accompagnés d'un chien secouriste nommé Walt. Le moteur 2D UbiArt Framework associe énigmes, aventure et fiches pédagogiques historiques.",
+          impactFr: "Le projet reçoit le label officiel de la Mission du centenaire de la Première Guerre mondiale pour son travail de documentation historique.",
+          impactIntl: "Le jeu remporte les prix du Meilleur récit et des Games for Change aux Game Awards 2014 à Las Vegas.",
+          sourceName: "The Game Awards Historical Archive 2014",
+          sourceUrl: "https://thegameawards.com/history/year-2014",
+          credit: "Image : Ubisoft Entertainment SA, usage documentaire"
+        },
+        en: {
+          title: "Valiant Hearts: The Great War",
+          studio: "Ubisoft Montpellier",
+          creator: "Yoan Fanise, Paul Tumelaire",
+          platform: "PC, PS3, PS4, Xbox 360, Xbox One, Switch",
+          desc: "Four intersecting lives face the Western Front of World War I assisted by a rescue dog named Walt. Built on the UbiArt Framework, the game mixes puzzle mechanics with authentic historical archival notes.",
+          impactFr: "The game received official accreditation from the French World War I Centenary Commission for its documentary integration.",
+          impactIntl: "It won Best Narrative and the Games for Change category at The Game Awards 2014 in Las Vegas.",
+          sourceName: "The Game Awards 2014 archive",
+          sourceUrl: "https://thegameawards.com/history/year-2014",
+          credit: "Image: Ubisoft Entertainment SA, fair educational use"
+        }
+      },
+      {
+        id: 11,
+        slug: "life-is-strange",
+        year: 2015,
+        shortTitle: "Life is Strange",
+        city: "Paris",
+        coords: { x: 168, y: 88 },
+        fr: {
+          title: "Life is Strange",
+          studio: "Dontnod Entertainment",
+          creator: "Michel Koch, Raoul Barbet, Jean-Luc Cano",
+          platform: "PC, PS3, PS4, Xbox 360, Xbox One",
+          desc: "Max Caulfield, étudiante en photographie dans l'Oregon, découvre sa capacité à rembobiner le cours du temps. La narration épisodique explore les dilemmes moraux, les relations adolescentes et l'effet papillon.",
+          impactFr: "Dontnod confirme la pérennité d'un grand studio parisien indépendant coté en bourse axé sur la narration contemporaine.",
+          impactIntl: "Le jeu remporte le BAFTA Games Award de la Meilleure Histoire en 2016 et dépasse 3 millions de joueurs uniques dès 2017.",
+          sourceName: "BAFTA Games Awards Database 2016",
+          sourceUrl: "https://www.bafta.org/games/awards/2016",
+          credit: "Image : Dontnod Entertainment / Square Enix Europe"
+        },
+        en: {
+          title: "Life is Strange",
+          studio: "Dontnod Entertainment",
+          creator: "Michel Koch, Raoul Barbet, Jean-Luc Cano",
+          platform: "PC, PS3, PS4, Xbox 360, Xbox One",
+          desc: "Photography student Max Caulfield discovers the power to rewind short periods of time in Oregon. The episodic structure centers on ethical consequences, youth relationships, and cause-and-effect branching.",
+          impactFr: "The title confirmed Dontnod as an independent publicly traded studio in Paris specialized in narrative production.",
+          impactIntl: "It won the BAFTA Games Award for Best Story in 2016 and surpassed 3 million unique players by 2017.",
+          sourceName: "BAFTA Games Awards 2016",
+          sourceUrl: "https://www.bafta.org/games/awards/2016",
+          credit: "Image: Dontnod Entertainment / Square Enix Europe"
+        }
+      },
+      {
+        id: 12,
+        slug: "clair-obscur-expedition-33",
+        year: 2025,
+        shortTitle: "Expedition 33",
+        city: "Montpellier",
+        coords: { x: 190, y: 270 },
+        fr: {
+          title: "Clair Obscur: Expedition 33",
+          studio: "Sandfall Interactive",
+          creator: "Guillaume Broche",
+          platform: "PlayStation 5, Xbox Series, PC",
+          desc: "Une équipe d'expédition tente d'arrêter la Peintresse, une entité qui efface chaque année les humains d'un certain âge. Le jeu combine un système au tour par tour inspiré des JRPG avec des esquives et contres en temps réel.",
+          impactFr: "Sandfall Interactive incarne le renouvellement de l'écosystème indépendant à Montpellier, fondé par d'anciens concepteurs d'Ubisoft.",
+          impactIntl: "Développé sous Unreal Engine 5 et édité par Kepler Interactive, le titre a été dévoilé lors du Xbox Games Showcase mondial en juin 2024.",
+          sourceName: "Annonce officielle Xbox Showcase / Sandfall",
+          sourceUrl: "https://www.sandfall.co/",
+          credit: "Image : Sandfall Interactive / Kepler Interactive"
+        },
+        en: {
+          title: "Clair Obscur: Expedition 33",
+          studio: "Sandfall Interactive",
+          creator: "Guillaume Broche",
+          platform: "PlayStation 5, Xbox Series, PC",
+          desc: "Expedition members set out to stop the Paintress, a figure who erases people of a specific age every year. Mechanics combine turn-based commands inspired by JRPGs with real-time reaction counters.",
+          impactFr: "Sandfall Interactive highlights new independent production in Montpellier, created by former Ubisoft staff.",
+          impactIntl: "Built with Unreal Engine 5 and published by Kepler Interactive, it was unveiled at the global Xbox Games Showcase in June 2024.",
+          sourceName: "Xbox Games Showcase Sandfall official note",
+          sourceUrl: "https://www.sandfall.co/",
+          credit: "Image: Sandfall Interactive / Kepler Interactive"
+        }
+      }
+    ];
+
+    const CITIES_DATA = [
+      {
+        name: "Paris",
+        x: 168,
+        y: 88,
+        games: ["Le Manoir de Mortevielle", "Captain Blood", "Another World", "Heavy Rain", "Life is Strange"]
+      },
+      {
+        name: "Lyon",
+        x: 215,
+        y: 195,
+        games: ["Alone in the Dark", "Little Big Adventure"]
+      },
+      {
+        name: "Montpellier",
+        x: 190,
+        y: 270,
+        games: ["Rayman", "Beyond Good & Evil", "Valiant Hearts", "Clair Obscur: Expedition 33"]
+      },
+      {
+        name: "Roubaix",
+        x: 175,
+        y: 35,
+        games: ["Dofus"]
+      }
+    ];
+
+    // State
+    let currentLang = "fr";
+    let soundEnabled = false;
+    let audioCtx = null;
+    const visitedStops = new Set();
+    let currentStopIndex = 0;
+
+    // Canvas & physical constants
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const stopsSpacing = 200;
+    const pathStartX = 110;
+    const totalTrackWidth = pathStartX + (STOPS_DATA.length - 1) * stopsSpacing + 180;
+    const GROUND_Y = 195;
+
+    // Movement state & physics
+    const keys = {
+      left: false,
+      right: false
+    };
+
+    const player = {
+      x: pathStartX,
+      y: GROUND_Y,
+      vy: 0,
+      isGrounded: true,
+      facing: 1,
+      isWalking: false,
+      walkFrame: 0,
+      walkTimer: 0,
+      moveSpeed: 3.8,
+      jumpForce: -8.8,
+      gravity: 0.45
+    };
+
+    let cameraX = 0;
+
+    // Procedural drifting pixel clouds
+    const clouds = [
+      { x: 50, y: 30, speed: 0.35, shape: 0 },
+      { x: 280, y: 55, speed: 0.22, shape: 1 },
+      { x: 520, y: 25, speed: 0.4, shape: 0 },
+      { x: 800, y: 45, speed: 0.28, shape: 2 },
+      { x: 1100, y: 30, speed: 0.32, shape: 1 },
+      { x: 1400, y: 60, speed: 0.25, shape: 0 },
+      { x: 1750, y: 35, speed: 0.38, shape: 2 },
+      { x: 2100, y: 50, speed: 0.2, shape: 1 },
+      { x: 2380, y: 28, speed: 0.34, shape: 0 }
+    ];
+
+    function drawPixelCloud(cx, cy, shape) {
+      ctx.fillStyle = "#ffffff";
+      if (shape === 0) {
+        // Flat puffy cloud
+        ctx.fillRect(cx + 8, cy, 24, 6);
+        ctx.fillRect(cx + 4, cy + 6, 32, 6);
+        ctx.fillRect(cx, cy + 12, 40, 6);
+      } else if (shape === 1) {
+        // High puffy cloud
+        ctx.fillRect(cx + 12, cy, 16, 5);
+        ctx.fillRect(cx + 6, cy + 5, 28, 5);
+        ctx.fillRect(cx + 2, cy + 10, 36, 5);
+        ctx.fillRect(cx + 15, cy + 15, 42, 5);
+      } else {
+        // Elongated wind cloud
+        ctx.fillRect(cx + 16, cy, 22, 4);
+        ctx.fillRect(cx + 6, cy + 4, 38, 5);
+        ctx.fillRect(cx, cy + 9, 48, 5);
+      }
+    }
+
+    function updateClouds() {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reducedMotion) return;
+
+      for (let i = 0; i < clouds.length; i++) {
+        clouds[i].x += clouds[i].speed;
+        if (clouds[i].x > totalTrackWidth + 60) {
+          clouds[i].x = -60;
+        }
+      }
+    }
+
+    function renderClouds() {
+      for (let i = 0; i < clouds.length; i++) {
+        drawPixelCloud(clouds[i].x, clouds[i].y, clouds[i].shape);
+      }
+    }
+
+    function playBeep(frequency, duration, type = "square") {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playStepSound() {
+      playBeep(170, 0.03, "triangle");
+    }
+
+    function playJumpSound() {
+      if (!soundEnabled) return;
+      playBeep(320, 0.08, "square");
+      setTimeout(() => playBeep(480, 0.09, "square"), 40);
+    }
+
+    function playJingle() {
+      if (!soundEnabled) return;
+      playBeep(260, 0.07, "square");
+      setTimeout(() => playBeep(330, 0.07, "square"), 80);
+      setTimeout(() => playBeep(392, 0.09, "square"), 160);
+      setTimeout(() => playBeep(523, 0.18, "square"), 240);
+    }
+
+    function triggerJump() {
+      if (player.isGrounded) {
+        player.vy = player.jumpForce;
+        player.isGrounded = false;
+        playJumpSound();
+      }
+    }
+
+    function drawEiffelTower(x, y) {
+      ctx.fillStyle = "#1d2b53";
+      // Spire top
+      ctx.fillRect(x + 23, y - 110, 4, 25);
+      ctx.fillRect(x + 24, y - 120, 2, 10);
+      // Top platform
+      ctx.fillRect(x + 19, y - 85, 12, 6);
+      // Upper tier
+      ctx.fillRect(x + 20, y - 79, 10, 25);
+      // Middle platform
+      ctx.fillRect(x + 13, y - 54, 24, 7);
+      // Middle pillars
+      ctx.fillRect(x + 15, y - 47, 7, 24);
+      ctx.fillRect(x + 28, y - 47, 7, 24);
+      // Lower platform
+      ctx.fillRect(x + 6, y - 23, 38, 8);
+      // Base arches
+      ctx.fillRect(x + 4, y - 15, 12, 15);
+      ctx.fillRect(x + 34, y - 15, 12, 15);
+      // Arch bridge cutout
+      ctx.fillStyle = "#3a7bd5"; // Matches blue sky
+      ctx.fillRect(x + 16, y - 10, 18, 10);
+    }
+
+    function drawModernSkyline() {
+      const buildingData = [
+        { offset: 40, w: 46, h: 80, winRows: 4, winCols: 2 },
+        { offset: 120, w: 35, h: 105, winRows: 5, winCols: 2 },
+        { offset: 180, w: 55, h: 70, winRows: 3, winCols: 3 },
+        { offset: 520, w: 40, h: 95, winRows: 5, winCols: 2 },
+        { offset: 600, w: 60, h: 75, winRows: 3, winCols: 3 },
+        { offset: 700, w: 48, h: 110, winRows: 6, winCols: 2 },
+        { offset: 790, w: 52, h: 65, winRows: 3, winCols: 3 },
+        { offset: 950, w: 42, h: 115, winRows: 6, winCols: 2 },
+        { offset: 1050, w: 55, h: 85, winRows: 4, winCols: 3 },
+        { offset: 1200, w: 44, h: 100, winRows: 5, winCols: 2 },
+        { offset: 1320, w: 50, h: 70, winRows: 3, winCols: 3 },
+        { offset: 1480, w: 58, h: 90, winRows: 4, winCols: 3 },
+        { offset: 1650, w: 45, h: 120, winRows: 6, winCols: 2 },
+        { offset: 1780, w: 54, h: 80, winRows: 4, winCols: 3 },
+        { offset: 1950, w: 42, h: 105, winRows: 5, winCols: 2 },
+        { offset: 2100, w: 50, h: 75, winRows: 3, winCols: 3 },
+        { offset: 2280, w: 48, h: 95, winRows: 5, winCols: 2 },
+        { offset: 2420, w: 56, h: 110, winRows: 5, winCols: 3 }
+      ];
+
+      buildingData.forEach(b => {
+        const bx = b.offset;
+        const by = GROUND_Y - b.h;
+
+        // Building silhouette
+        ctx.fillStyle = "#1d2b53";
+        ctx.fillRect(bx, by, b.w, b.h);
+
+        // Antenna
+        ctx.fillStyle = "#14141f";
+        ctx.fillRect(bx + Math.floor(b.w / 2) - 1, by - 10, 3, 10);
+
+        // Windows (mustard illuminated grid)
+        ctx.fillStyle = "#e0a526";
+        for (let r = 0; r < b.winRows; r++) {
+          for (let c = 0; c < b.winCols; c++) {
+            const wx = bx + 6 + c * 12;
+            const wy = by + 12 + r * 14;
+            if (wx + 6 < bx + b.w) {
+              ctx.fillRect(wx, wy, 6, 6);
+            }
+          }
+        }
+      });
+
+      // Eiffel Tower between checkpoint 2 (Captain Blood) and checkpoint 3 (Another World)
+      const eiffelX = pathStartX + stopsSpacing * 1.45;
+      drawEiffelTower(eiffelX, GROUND_Y);
+    }
+
+    function drawPixelTree(x, y) {
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(x - 2, y - 12, 4, 12);
+      ctx.fillStyle = "#3f8f4f";
+      ctx.fillRect(x - 14, y - 24, 28, 12);
+      ctx.fillRect(x - 10, y - 34, 20, 10);
+      ctx.fillRect(x - 6, y - 42, 12, 8);
+      ctx.fillRect(x - 2, y - 46, 4, 4);
+    }
+
+    function drawCharacter(cx, cy, frame, facing) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      if (facing === -1) {
+        ctx.scale(-1, 1);
+      }
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const effectiveFrame = reducedMotion ? 0 : frame;
+
+      // Hat (deep blue)
+      ctx.fillStyle = "#1d2b53";
+      ctx.fillRect(-6, -26, 12, 4);
+      ctx.fillRect(-8, -24, 16, 4);
+      ctx.fillRect(4, -28, 4, 3);
+
+      // Head (cream)
+      ctx.fillStyle = "#f4ecd8";
+      ctx.fillRect(-5, -20, 10, 8);
+
+      // Eye (dark ink)
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(1, -18, 2, 2);
+
+      // Scarf (red)
+      ctx.fillStyle = "#c8372d";
+      ctx.fillRect(-5, -12, 10, 3);
+      ctx.fillRect(-7, -10, 4, 5);
+
+      // Jacket (mustard)
+      ctx.fillStyle = "#e0a526";
+      ctx.fillRect(-6, -9, 12, 11);
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(-1, -8, 2, 10);
+
+      // Legs / feet
+      ctx.fillStyle = "#1d2b53";
+      if (!player.isGrounded) {
+        // Jumping pose (tucked legs)
+        ctx.fillRect(-6, 2, 4, 4);
+        ctx.fillRect(2, 2, 4, 4);
+        ctx.fillStyle = "#14141f";
+        ctx.fillRect(-7, 6, 5, 2);
+        ctx.fillRect(2, 6, 5, 2);
+      } else if (effectiveFrame === 0) {
+        ctx.fillRect(-5, 2, 4, 6);
+        ctx.fillRect(1, 2, 4, 6);
+        ctx.fillStyle = "#14141f";
+        ctx.fillRect(-6, 8, 5, 2);
+        ctx.fillRect(1, 8, 5, 2);
+      } else {
+        ctx.fillRect(-6, 2, 4, 5);
+        ctx.fillRect(3, 2, 4, 5);
+        ctx.fillStyle = "#14141f";
+        ctx.fillRect(-7, 7, 5, 2);
+        ctx.fillRect(3, 7, 5, 2);
+      }
+
+      ctx.restore();
+    }
+
+    /**
+     * Draws a detailed golden pixel art croissant checkpoint
+     */
+    function drawCroissantCheckpoint(x, y, isVisited, isPlayerHere, index) {
+      const stop = STOPS_DATA[index];
+
+      // Bakery display stand base
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(x - 18, y - 4, 36, 12);
+      ctx.fillStyle = isVisited ? "#3f8f4f" : "#1d2b53";
+      ctx.fillRect(x - 14, y - 16, 28, 12);
+      ctx.fillStyle = "#f4ecd8";
+      ctx.fillRect(x - 12, y - 14, 24, 8);
+      ctx.fillStyle = isVisited ? "#3f8f4f" : "#c8372d";
+      ctx.fillRect(x - 6, y - 12, 12, 4);
+
+      // Croissant plate
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(x - 22, y - 20, 44, 4);
+      ctx.fillStyle = "#dfd4b8";
+      ctx.fillRect(x - 20, y - 22, 40, 2);
+
+      // Golden pixel-art croissant body
+      // Outer ink border of crescent
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(x - 16, y - 44, 32, 22);
+      // Cut corners for crescent silhouette
+      ctx.clearRect(x - 16, y - 44, 4, 6);
+      ctx.clearRect(x + 12, y - 44, 4, 6);
+      ctx.clearRect(x - 8, y - 26, 16, 4);
+
+      // Base golden pastry layer
+      ctx.fillStyle = "#e0a526";
+      ctx.fillRect(x - 14, y - 42, 28, 18);
+
+      // Dark crust layers (baked brown #c8372d / deep toast)
+      ctx.fillStyle = "#c8372d";
+      ctx.fillRect(x - 12, y - 40, 4, 14);
+      ctx.fillRect(x + 8, y - 40, 4, 14);
+      ctx.fillRect(x - 2, y - 42, 4, 16);
+
+      // Warm buttery flake highlights
+      ctx.fillStyle = "#f4ecd8";
+      ctx.fillRect(x - 6, y - 38, 4, 4);
+      ctx.fillRect(x + 2, y - 38, 4, 4);
+      ctx.fillRect(x - 10, y - 34, 3, 4);
+      ctx.fillRect(x + 7, y - 34, 3, 4);
+
+      // Crescent tips curved downward
+      ctx.fillStyle = "#e0a526";
+      ctx.fillRect(x - 18, y - 32, 4, 8);
+      ctx.fillRect(x + 14, y - 32, 4, 8);
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(x - 20, y - 30, 2, 8);
+      ctx.fillRect(x + 18, y - 30, 2, 8);
+      ctx.fillRect(x - 18, y - 24, 4, 2);
+      ctx.fillRect(x + 14, y - 24, 4, 2);
+
+      // Interaction prompt arrow
+      if (isPlayerHere) {
+        ctx.fillStyle = "#c8372d";
+        ctx.fillRect(x - 4, y - 56, 8, 6);
+        ctx.fillRect(x - 6, y - 50, 12, 3);
+        ctx.fillRect(x - 2, y - 47, 4, 3);
+      }
+
+      // Year badge (below croissant stand)
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "8px 'Press Start 2P', monospace";
+      ctx.textAlign = "center";
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#14141f";
+      ctx.strokeText(stop.year, x, y + 20);
+      ctx.fillText(stop.year, x, y + 20);
+
+      // Game Title directly visible in white font with pixel outline
+      ctx.font = "7px 'Press Start 2P', monospace";
+      ctx.textAlign = "center";
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#14141f";
+      ctx.strokeText(stop.shortTitle, x, y - 60);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(stop.shortTitle, x, y - 60);
+    }
+
+    function updatePhysics() {
+      let isMovingHorizontally = false;
+
+      if (keys.left) {
+        player.x -= player.moveSpeed;
+        player.facing = -1;
+        isMovingHorizontally = true;
+      }
+      if (keys.right) {
+        player.x += player.moveSpeed;
+        player.facing = 1;
+        isMovingHorizontally = true;
+      }
+
+      // Boundary limits
+      if (player.x < 35) player.x = 35;
+      if (player.x > totalTrackWidth - 45) player.x = totalTrackWidth - 45;
+
+      // Vertical jumping physics
+      player.vy += player.gravity;
+      player.y += player.vy;
+
+      if (player.y >= GROUND_Y) {
+        player.y = GROUND_Y;
+        player.vy = 0;
+        player.isGrounded = true;
+      }
+
+      // Walking animation cycle
+      if (isMovingHorizontally && player.isGrounded) {
+        player.walkTimer++;
+        if (player.walkTimer > 8) {
+          player.walkFrame = player.walkFrame === 0 ? 1 : 0;
+          player.walkTimer = 0;
+          playStepSound();
+        }
+      } else if (!isMovingHorizontally && player.isGrounded) {
+        player.walkFrame = 0;
+        player.walkTimer = 0;
+      }
+
+      // Closest checkpoint update
+      let closestIdx = 0;
+      let minDist = 9999;
+      STOPS_DATA.forEach((s, i) => {
+        const sx = pathStartX + i * stopsSpacing;
+        const d = Math.abs(player.x - sx);
+        if (d < minDist) {
+          minDist = d;
+          closestIdx = i;
+        }
+      });
+      if (closestIdx !== currentStopIndex) {
+        currentStopIndex = closestIdx;
+        updateTimelineStripSelection();
+      }
+    }
+
+    function renderCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const displayWidth = Math.floor(rect.width);
+      const displayHeight = Math.floor(rect.height);
+
+      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+        canvas.width = displayWidth;
+        canvas.height = displayHeight;
+      }
+
+      // Sky Background (Retro Blue #3a7bd5)
+      ctx.fillStyle = "#3a7bd5";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Smooth camera follow
+      const targetCamX = player.x - canvas.width / 2;
+      cameraX += (targetCamX - cameraX) * 0.15;
+      if (cameraX < 0) cameraX = 0;
+      const maxCam = Math.max(0, totalTrackWidth - canvas.width);
+      if (cameraX > maxCam) cameraX = maxCam;
+
+      ctx.save();
+      ctx.translate(-Math.floor(cameraX), 0);
+
+      // Drifting animated clouds
+      renderClouds();
+
+      // Background modern buildings and Eiffel Tower
+      drawModernSkyline();
+
+      // Scenery trees
+      for (let i = 0; i < totalTrackWidth; i += 75) {
+        if ((i / 75) % 3 === 0) {
+          drawPixelTree(i + 25, GROUND_Y);
+        }
+      }
+
+      // Ground Path
+      ctx.fillStyle = "#dfd4b8";
+      ctx.fillRect(0, GROUND_Y, totalTrackWidth, 90);
+      ctx.fillStyle = "#14141f";
+      ctx.fillRect(0, GROUND_Y, totalTrackWidth, 4);
+
+      // Path stone slabs
+      for (let px = 20; px < totalTrackWidth; px += 36) {
+        ctx.fillStyle = "#cfc2a0";
+        ctx.fillRect(px, GROUND_Y + 12, 18, 6);
+        ctx.fillRect(px + 12, GROUND_Y + 28, 16, 6);
+      }
+
+      // Croissant checkpoints with white-text titles
+      STOPS_DATA.forEach((stop, index) => {
+        const kioskX = pathStartX + index * stopsSpacing;
+        const isHere = Math.abs(player.x - kioskX) < 28;
+        const isVisited = visitedStops.has(stop.id);
+        drawCroissantCheckpoint(kioskX, GROUND_Y, isVisited, isHere, index);
+      });
+
+      // Player Character
+      drawCharacter(player.x, player.y, player.walkFrame, player.facing);
+
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      updateClouds();
+      updatePhysics();
+      renderCanvas();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function renderFranceMap() {
+      const mapCanvas = document.getElementById("franceMapCanvas");
+      const mctx = mapCanvas.getContext("2d");
+      const w = mapCanvas.width;
+      const h = mapCanvas.height;
+
+      mctx.fillStyle = "#dfd4b8";
+      mctx.fillRect(0, 0, w, h);
+
+      mctx.fillStyle = "#f4ecd8";
+      mctx.strokeStyle = "#14141f";
+      mctx.lineWidth = 3;
+
+      mctx.beginPath();
+      mctx.moveTo(140, 25);
+      mctx.lineTo(200, 25);
+      mctx.lineTo(250, 75);
+      mctx.lineTo(260, 150);
+      mctx.lineTo(235, 235);
+      mctx.lineTo(220, 280);
+      mctx.lineTo(155, 285);
+      mctx.lineTo(95, 250);
+      mctx.lineTo(75, 175);
+      mctx.lineTo(30, 110);
+      mctx.lineTo(90, 80);
+      mctx.closePath();
+      mctx.fill();
+      mctx.stroke();
+
+      mctx.strokeStyle = "#cfc2a0";
+      mctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 32) {
+        mctx.beginPath();
+        mctx.moveTo(x, 0);
+        mctx.lineTo(x, h);
+        mctx.stroke();
+      }
+      for (let y = 0; y < h; y += 32) {
+        mctx.beginPath();
+        mctx.moveTo(0, y);
+        mctx.lineTo(w, y);
+        mctx.stroke();
+      }
+
+      CITIES_DATA.forEach(city => {
+        mctx.fillStyle = "#c8372d";
+        mctx.fillRect(city.x - 5, city.y - 5, 10, 10);
+        mctx.strokeStyle = "#14141f";
+        mctx.lineWidth = 2;
+        mctx.strokeRect(city.x - 5, city.y - 5, 10, 10);
+
+        mctx.fillStyle = "#f4ecd8";
+        mctx.fillRect(city.x - 2, city.y - 2, 4, 4);
+
+        mctx.fillStyle = "#14141f";
+        mctx.font = "8px 'Press Start 2P', monospace";
+        mctx.textAlign = "left";
+        mctx.fillText(city.name, city.x + 8, city.y + 4);
+      });
+    }
+
+    const dialog = document.getElementById("stop-dialog");
+    const closeBtn = document.getElementById("dialog-close-btn");
+
+    function openStopPanel(index) {
+      const stop = STOPS_DATA[index];
+      const langData = stop[currentLang];
+
+      visitedStops.add(stop.id);
+      updateShelf();
+      updateTimelineStripSelection();
+      playJingle();
+
+      document.getElementById("dialog-year").textContent = stop.year;
+      document.getElementById("dialog-title").textContent = langData.title;
+      document.getElementById("dialog-meta").textContent = 
+        `${currentLang === 'fr' ? 'Studio' : 'Studio'}: ${langData.studio} | ` +
+        `${currentLang === 'fr' ? 'Auteur(s)' : 'Creator(s)'}: ${langData.creator} | ` +
+        `${currentLang === 'fr' ? 'Support' : 'Platform'}: ${langData.platform}`;
+
+      const imgEl = document.getElementById("dialog-img");
+      const fallbackEl = document.getElementById("dialog-img-fallback");
+      imgEl.style.display = "block";
+      fallbackEl.style.display = "none";
+      imgEl.alt = `${langData.title} screenshot`;
+      imgEl.src = `img/${stop.slug}.jpg`;
+
+      document.getElementById("dialog-credit").textContent = langData.credit;
+      document.getElementById("dialog-desc").textContent = langData.desc;
+      document.getElementById("dialog-impact-fr").textContent = langData.impactFr;
+      document.getElementById("dialog-impact-intl").textContent = langData.impactIntl;
+
+      const sourceLink = document.getElementById("dialog-source-link");
+      sourceLink.textContent = langData.sourceName;
+      sourceLink.href = stop.sourceUrl;
+
+      document.getElementById("lbl-desc").textContent = currentLang === "fr" ? "Description" : "Description";
+      document.getElementById("lbl-impact-fr").textContent = currentLang === "fr" ? "Impact en France" : "Impact in France";
+      document.getElementById("lbl-impact-intl").textContent = currentLang === "fr" ? "Impact international" : "International Impact";
+      document.getElementById("lbl-source").textContent = currentLang === "fr" ? "Source :" : "Source:";
+
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute("open", "");
+      }
+      closeBtn.focus();
+    }
+
+    function closeStopPanel() {
+      if (typeof dialog.close === "function") {
+        dialog.close();
+      } else {
+        dialog.removeAttribute("open");
+      }
+    }
+
+    closeBtn.addEventListener("click", closeStopPanel);
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeStopPanel();
+    });
+
+    dialog.addEventListener("click", (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const inDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!inDialog) {
+        closeStopPanel();
+      }
+    });
+
+    function instantJumpAndOpen(index) {
+      const targetPos = pathStartX + index * stopsSpacing;
+      player.x = targetPos;
+      player.y = GROUND_Y;
+      player.vy = 0;
+      player.isGrounded = true;
+      currentStopIndex = index;
+      openStopPanel(index);
+    }
+
+    function buildTimelineStrip() {
+      const container = document.getElementById("timeline-strip");
+      container.innerHTML = "";
+      STOPS_DATA.forEach((stop, index) => {
+        const marker = document.createElement("button");
+        marker.className = "timeline-marker";
+        marker.id = `marker-${index}`;
+        
+        const yearSpan = document.createElement("span");
+        yearSpan.className = "timeline-marker-year";
+        yearSpan.textContent = stop.year;
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "timeline-marker-name";
+        nameSpan.textContent = stop.shortTitle;
+
+        marker.appendChild(yearSpan);
+        marker.appendChild(nameSpan);
+        marker.title = `${stop.year} - ${stop[currentLang].title}`;
+        
+        marker.addEventListener("click", () => {
+          instantJumpAndOpen(index);
+        });
+        container.appendChild(marker);
+      });
+      updateTimelineStripSelection();
+    }
+
+    function updateTimelineStripSelection() {
+      STOPS_DATA.forEach((stop, index) => {
+        const marker = document.getElementById(`marker-${index}`);
+        if (!marker) return;
+        if (visitedStops.has(stop.id)) {
+          marker.classList.add("visited");
+        } else {
+          marker.classList.remove("visited");
+        }
+
+        if (currentStopIndex === index) {
+          marker.classList.add("current");
+        } else {
+          marker.classList.remove("current");
+        }
+      });
+    }
+
+    function updateShelf() {
+      const shelfGrid = document.getElementById("shelf-grid");
+      const shelfCounter = document.getElementById("shelf-counter");
+      shelfCounter.textContent = `${visitedStops.size} / 12`;
+      shelfGrid.innerHTML = "";
+
+      STOPS_DATA.forEach((stop, idx) => {
+        const slot = document.createElement("div");
+        slot.className = "cartridge-slot";
+        if (visitedStops.has(stop.id)) {
+          slot.classList.add("unlocked");
+          slot.innerHTML = `<strong>${stop.year}</strong><br>${stop.shortTitle}`;
+          slot.title = stop[currentLang].title;
+          slot.addEventListener("click", () => instantJumpAndOpen(idx));
+        } else {
+          slot.innerHTML = `<strong>${stop.year}</strong><br>[ ? ]`;
+        }
+        shelfGrid.appendChild(slot);
+      });
+    }
+
+    function populateSourcesList() {
+      const container = document.getElementById("sources-container");
+      container.innerHTML = "";
+      STOPS_DATA.forEach(stop => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${stop.year} - ${stop[currentLang].title} (${stop[currentLang].studio})</strong> : ` +
+          `<a href="${stop.sourceUrl}" target="_blank" rel="noopener noreferrer">${stop[currentLang].sourceName}</a>`;
+        container.appendChild(li);
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (dialog.open) return;
+
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+        keys.left = true;
+      } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+        keys.right = true;
+      } else if (e.key === " " || e.code === "Space") {
+        e.preventDefault();
+        triggerJump();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        STOPS_DATA.forEach((stop, idx) => {
+          const kioskX = pathStartX + idx * stopsSpacing;
+          if (Math.abs(player.x - kioskX) < 32) {
+            openStopPanel(idx);
+          }
+        });
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+        keys.left = false;
+      } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+        keys.right = false;
+      }
+    });
+
+    function bindTouchButton(btnId, onDown, onUp) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const handlePress = (e) => {
+        e.preventDefault();
+        btn.classList.add("pressed");
+        if (onDown) onDown();
+      };
+
+      const handleRelease = (e) => {
+        e.preventDefault();
+        btn.classList.remove("pressed");
+        if (onUp) onUp();
+      };
+
+      btn.addEventListener("touchstart", handlePress, { passive: false });
+      btn.addEventListener("touchend", handleRelease, { passive: false });
+      btn.addEventListener("touchcancel", handleRelease, { passive: false });
+      btn.addEventListener("mousedown", handlePress);
+      btn.addEventListener("mouseup", handleRelease);
+      btn.addEventListener("mouseleave", handleRelease);
+    }
+
+    bindTouchButton("btn-left", () => { keys.left = true; }, () => { keys.left = false; });
+    bindTouchButton("btn-right", () => { keys.right = true; }, () => { keys.right = false; });
+    bindTouchButton("btn-jump", () => { triggerJump(); }, null);
+
+    const actionBtn = document.getElementById("btn-action");
+    actionBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      STOPS_DATA.forEach((stop, idx) => {
+        const kioskX = pathStartX + idx * stopsSpacing;
+        if (Math.abs(player.x - kioskX) < 42) {
+          openStopPanel(idx);
+        }
+      });
+    });
+
+    // Tap directly on canvas
+    canvas.addEventListener("pointerdown", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const clickScreenX = e.clientX - rect.left;
+      const worldX = clickScreenX + cameraX;
+
+      let clickedKioskIndex = -1;
+      STOPS_DATA.forEach((stop, idx) => {
+        const kioskX = pathStartX + idx * stopsSpacing;
+        if (Math.abs(worldX - kioskX) < 40) {
+          clickedKioskIndex = idx;
+        }
+      });
+
+      if (clickedKioskIndex !== -1) {
+        instantJumpAndOpen(clickedKioskIndex);
+      } else {
+        if (worldX < player.x) {
+          player.x = Math.max(35, player.x - 30);
+          player.facing = -1;
+        } else {
+          player.x = Math.min(totalTrackWidth - 45, player.x + 30);
+          player.facing = 1;
+        }
+      }
+    });
+
+    // Map click/tap
+    const mapCanvas = document.getElementById("franceMapCanvas");
+    function handleMapInteraction(clientX, clientY) {
+      const rect = mapCanvas.getBoundingClientRect();
+      const scaleX = mapCanvas.width / rect.width;
+      const scaleY = mapCanvas.height / rect.height;
+      const clickX = (clientX - rect.left) * scaleX;
+      const clickY = (clientY - rect.top) * scaleY;
+
+      let foundCity = null;
+      CITIES_DATA.forEach(city => {
+        const dist = Math.hypot(clickX - city.x, clickY - city.y);
+        if (dist < 22) {
+          foundCity = city;
+        }
+      });
+
+      if (foundCity) {
+        document.getElementById("city-details-prompt").style.display = "none";
+        const contentBox = document.getElementById("city-details-content");
+        contentBox.style.display = "block";
+        document.getElementById("city-name-display").textContent = `${foundCity.name}`;
+        
+        const gamesList = foundCity.games.map(g => `• ${g}`).join("<br>");
+        document.getElementById("city-games-display").innerHTML = 
+          `<strong>${currentLang === "fr" ? "Jeux de la frise créés ici :" : "Timeline games made here:"}</strong><br>${gamesList}`;
+      }
+    }
+
+    mapCanvas.addEventListener("click", (e) => handleMapInteraction(e.clientX, e.clientY));
+    mapCanvas.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches[0]) {
+        handleMapInteraction(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    // Audio button
+    const soundBtn = document.getElementById("sound-btn");
+    soundBtn.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? "Audio: ON" : "Audio: OFF";
+      if (soundEnabled) {
+        soundBtn.classList.add("active");
+        playBeep(440, 0.1, "square");
+      } else {
+        soundBtn.classList.remove("active");
+      }
+    });
+
+    // Language switch
+    const langBtn = document.getElementById("lang-btn");
+    langBtn.addEventListener("click", () => {
+      currentLang = currentLang === "fr" ? "en" : "fr";
+      langBtn.textContent = currentLang === "fr" ? "EN" : "FR";
+      updateLanguageUI();
+    });
+
+    function updateLanguageUI() {
+      if (currentLang === "fr") {
+        document.getElementById("ui-title").textContent = "Histoire du jeu vidéo en France";
+        document.getElementById("ui-subtitle").textContent = "Frise chronologique interactive (1987-2025)";
+        document.getElementById("ui-legend").textContent = "[Flèches / A-D]: Marcher | [Espace]: Sauter | [Entrée]: Inspecter borne | [Échap]: Fermer";
+        document.getElementById("btn-left").textContent = "< GAUCHE";
+        document.getElementById("btn-right").textContent = "DROITE >";
+        document.getElementById("btn-jump").textContent = "SAUT";
+        document.getElementById("btn-action").textContent = "OUVRIR";
+        document.getElementById("shelf-title").textContent = "Étagère de cartouches";
+        document.getElementById("map-title").textContent = "Géographie des studios français";
+        document.getElementById("city-details-prompt").textContent = "Cliquez ou touchez un point de la carte pour inspecter une ville et ses jeux associés.";
+        document.getElementById("credits-title").textContent = "Crédits de l'équipe";
+        document.getElementById("sources-title").textContent = "Sources documentaires";
+      } else {
+        document.getElementById("ui-title").textContent = "History of Video Games in France";
+        document.getElementById("ui-subtitle").textContent = "Interactive Timeline Walk (1987-2025)";
+        document.getElementById("ui-legend").textContent = "[Arrows / A-D]: Walk | [Space]: Jump | [Enter]: Inspect Kiosk | [Esc]: Close";
+        document.getElementById("btn-left").textContent = "< LEFT";
+        document.getElementById("btn-right").textContent = "RIGHT >";
+        document.getElementById("btn-jump").textContent = "JUMP";
+        document.getElementById("btn-action").textContent = "OPEN";
+        document.getElementById("shelf-title").textContent = "Cartridge Shelf";
+        document.getElementById("map-title").textContent = "French Studio Geography";
+        document.getElementById("city-details-prompt").textContent = "Click or tap any marker on the map to inspect the city and its games.";
+        document.getElementById("credits-title").textContent = "Team Credits";
+        document.getElementById("sources-title").textContent = "Documentary Sources";
+      }
+
+      buildTimelineStrip();
+      updateShelf();
+      populateSourcesList();
+    }
+
+    window.onload = function () {
+      buildTimelineStrip();
+      updateShelf();
+      populateSourcesList();
+      renderFranceMap();
+      requestAnimationFrame(gameLoop);
+    };
+  </script>
+</body>
+</html>
